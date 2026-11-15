@@ -370,6 +370,121 @@
         <span id="toastMsg">¡Mensaje listo para enviar!</span>
     </div>
 
-    <!-- HTML5 AUDIO PLAYER -->
+<!-- HTML5 AUDIO PLAYER -->
     <audio id="bgMusic" loop preload="auto">
-        <source src="
+        <source src="cancion.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // WELCOME OVERLAY & AUDIO MUSIC
+        let bgMusic;
+        let isPlaying = false;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            bgMusic = document.getElementById('bgMusic');
+        });
+
+        function openInvitation() {
+            // 1. Ocultar el sobre inmediatamente
+            const overlay = document.getElementById('welcomeOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 500);
+            }
+
+            // 2. Intentar reproducir la música
+            if (bgMusic) {
+                bgMusic.play().then(() => {
+                    isPlaying = true;
+                    const musicIcon = document.getElementById('musicIcon');
+                    if (musicIcon) {
+                        musicIcon.className = "las la-volume-up text-xl text-blush-600 animate-pulse";
+                    }
+                }).catch((error) => {
+                    console.log("Música pausada por el navegador: ", error);
+                });
+            }
+        }
+
+        function toggleAudio() {
+            const musicIcon = document.getElementById('musicIcon');
+            if (!bgMusic) return;
+
+            if (isPlaying) {
+                bgMusic.pause();
+                isPlaying = false;
+                musicIcon.className = "las la-volume-mute text-xl";
+            } else {
+                bgMusic.play().then(() => {
+                    isPlaying = true;
+                    musicIcon.className = "las la-volume-up text-xl text-blush-600 animate-pulse";
+                });
+            }
+        }
+
+        // FECHA Y CRONÓMETRO
+        const targetDate = new Date('2026-12-26T21:30:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance < 0) return;
+
+            document.getElementById('days').innerText = String(Math.floor(distance / (1000 * 60 * 60 * 24))).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((distance % (1000 * 60)) / 1000)).padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // RSVP FORM TO WHATSAPP
+        function handleRSVP(event) {
+            event.preventDefault();
+            const name = document.getElementById('rsvpName') ? document.getElementById('rsvpName').value.trim() : '';
+            const status = document.getElementById('rsvpStatus') ? document.getElementById('rsvpStatus').value : '';
+            const message = document.getElementById('rsvpMessage') ? document.getElementById('rsvpMessage').value.trim() : '';
+
+            let text = `¡Hola Eloisa! Soy *${name}*.\n*Confirmación:* ${status}\n`;
+            if (message) text += `*Mensaje:* ${message}\n`;
+
+            const encodedText = encodeURIComponent(text);
+            const whatsappURL = `https://wa.me/?text=${encodedText}`;
+
+            showToast("¡Redirigiendo a WhatsApp!");
+            window.open(whatsappURL, '_blank');
+        }
+
+        // SONG SUGGESTION TO WHATSAPP
+        function handleSongSubmit(event) {
+            event.preventDefault();
+            const song = document.getElementById('songName') ? document.getElementById('songName').value.trim() : '';
+            if (!song) return;
+
+            const text = `¡Hola Eloisa! Sugiero este tema para la fiesta: *${song}* 🎶`;
+            const whatsappURL = `https://wa.me/?text=${encodeURIComponent(text)}`;
+
+            showToast("¡Sugerencia enviada!");
+            window.open(whatsappURL, '_blank');
+            if (document.getElementById('songName')) document.getElementById('songName').value = "";
+        }
+
+        // TOAST NOTIFICATION DISPLAY
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            if(toast && toastMsg) {
+                toastMsg.innerText = msg;
+                toast.classList.remove('translate-y-24', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-24', 'opacity-0');
+                }, 3500);
+            }
+        }
+    </script>
+</body>
+</html>
