@@ -370,9 +370,8 @@
         <span id="toastMsg">¡Mensaje listo para enviar!</span>
     </div>
 
-<!-- HTML5 AUDIO PLAYER -->
-    <audio id="bgMusic" loop preload="auto">
-        <source src="cancion.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop preload="auto">
+        <source src="./cancion.mp3" type="audio/mpeg">
     </audio>
 
     <!-- JAVASCRIPT LOGIC -->
@@ -385,8 +384,8 @@
             bgMusic = document.getElementById('bgMusic');
         });
 
-        function openInvitation() {
-            // 1. Ocultar el sobre inmediatamente
+     function openInvitation() {
+            // 1. Ocultar el sobre
             const overlay = document.getElementById('welcomeOverlay');
             if (overlay) {
                 overlay.style.opacity = '0';
@@ -395,32 +394,18 @@
                 }, 500);
             }
 
-            // 2. Intentar reproducir la música
-            if (bgMusic) {
-                bgMusic.play().then(() => {
+            // 2. Forzar música de inmediato
+            const reproductor = document.getElementById('bgMusic');
+            if (reproductor) {
+                reproductor.volume = 0.5; // Ajustar volumen si es muy alto
+                reproductor.play().then(() => {
                     isPlaying = true;
                     const musicIcon = document.getElementById('musicIcon');
                     if (musicIcon) {
                         musicIcon.className = "las la-volume-up text-xl text-blush-600 animate-pulse";
                     }
-                }).catch((error) => {
-                    console.log("Música pausada por el navegador: ", error);
-                });
-            }
-        }
-
-        function toggleAudio() {
-            const musicIcon = document.getElementById('musicIcon');
-            if (!bgMusic) return;
-
-            if (isPlaying) {
-                bgMusic.pause();
-                isPlaying = false;
-                musicIcon.className = "las la-volume-mute text-xl";
-            } else {
-                bgMusic.play().then(() => {
-                    isPlaying = true;
-                    musicIcon.className = "las la-volume-up text-xl text-blush-600 animate-pulse";
+                }).catch((e) => {
+                    console.log("El navegador bloqueó el autoplay:", e);
                 });
             }
         }
