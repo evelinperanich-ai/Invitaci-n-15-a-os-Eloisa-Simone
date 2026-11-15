@@ -374,17 +374,28 @@
         <source src="./cancion.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- JAVASCRIPT LOGIC -->
+  <!-- JAVASCRIPT LOGIC -->
     <script>
         // WELCOME OVERLAY & AUDIO MUSIC
         let bgMusic;
         let isPlaying = false;
+        let audioInitialized = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             bgMusic = document.getElementById('bgMusic');
         });
 
-     function openInvitation() {
+        // Initialize audio on first user interaction anywhere on the page
+        document.body.addEventListener('click', function() {
+            if (bgMusic && !audioInitialized) {
+                bgMusic.play().then(() => {
+                    bgMusic.pause(); // Just initialize, don't keep playing yet
+                    audioInitialized = true;
+                }).catch((e) => console.log("Init audio failed:", e));
+            }
+        }, { once: true });
+
+        function openInvitation() {
             // 1. Ocultar el sobre
             const overlay = document.getElementById('welcomeOverlay');
             if (overlay) {
@@ -394,19 +405,36 @@
                 }, 500);
             }
 
-            // 2. Forzar música de inmediato
-            const reproductor = document.getElementById('bgMusic');
-            if (reproductor) {
-                reproductor.volume = 0.5; // Ajustar volumen si es muy alto
-                reproductor.play().then(() => {
+            // 2. Intentar reproducir música
+            if (bgMusic) {
+                bgMusic.volume = 0.5;
+                const playPromise = bgMusic.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        isPlaying = true;
+                        const musicIcon = document.getElementById('musicIcon');
+                        if (musicIcon) musicIcon.className = "las la-volume-up text-xl text-blush-600 animate-pulse";
+                    }).catch(error => {
+                        console.log("Autoplay prevent: ", error);
+                    });
+                }
+            }
+        }
+
+        function toggleAudio() {
+            const musicIcon = document.getElementById('musicIcon');
+            if (!bgMusic) return;
+
+            if (isPlaying) {
+                bgMusic.pause();
+                isPlaying = false;
+                if (musicIcon) musicIcon.className = "las la-volume-mute text-xl";
+            } else {
+                bgMusic.play().then(() => {
                     isPlaying = true;
-                    const musicIcon = document.getElementById('musicIcon');
-                    if (musicIcon) {
-                        musicIcon.className = "las la-volume-up text-xl text-blush-600 animate-pulse";
-                    }
-                }).catch((e) => {
-                    console.log("El navegador bloqueó el autoplay:", e);
-                });
+                    if (musicIcon) musicIcon.className = "las la-volume-up text-xl text-blush-600 animate-pulse";
+                }).catch(e => console.log("Toggle failed:", e));
             }
         }
 
@@ -471,5 +499,3 @@
             }
         }
     </script>
-</body>
-</html>
