@@ -367,40 +367,6 @@
             </form>
         </section>
 
-        <!-- GIFTS / CBU SECTION -->
-        <section class="glass-card p-6 sm:p-8 rounded-3xl shadow-lg border border-gold-mid/30 text-center max-w-xl mx-auto">
-            <div class="w-12 h-12 bg-gold-light text-gold-dark rounded-full flex items-center justify-center mx-auto mb-3 text-xl shadow-inner">
-                <i class="fas fa-gift"></i>
-            </div>
-            <h3 class="font-cinzel text-xl font-bold text-gray-800 mb-2">Muestra de Cariño</h3>
-            <p class="text-gray-600 text-sm leading-relaxed mb-4">
-                "Tu presencia es mi mejor regalo". Sin embargo, si deseas hacerme un presente para acompañarme a cumplir mis proyectos:
-            </p>
-
-            <button onclick="toggleGiftDetails()" class="py-3 px-6 rounded-full bg-white border border-gold-mid text-gold-dark font-cinzel font-bold text-xs uppercase tracking-wider hover:bg-gold-light/40 transition-all shadow-sm">
-                <i class="fas fa-university mr-1"></i> Ver Datos Bancarios / Cuenta
-            </button>
-
-            <!-- Expandable Bank Info -->
-            <div id="giftDetails" class="hidden mt-6 p-4 bg-white/95 rounded-2xl border border-gray-200 text-left space-y-3 text-xs text-gray-700">
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="font-semibold">Titular:</span>
-                    <span class="font-bold text-gray-900">Eloisa Simone</span>
-                </div>
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="font-semibold">Cuenta / Banco:</span>
-                    <span>BROU / Mercado Pago</span>
-                </div>
-                <div class="flex justify-between items-center border-b pb-2">
-                    <span class="font-semibold">Alias / Cuenta:</span>
-                    <span id="cbuText" class="font-mono font-bold text-blush-700">eloisa.simone.15</span>
-                </div>
-                <button onclick="copyCBU()" class="w-full py-2.5 bg-blush-50 hover:bg-blush-100 text-blush-700 rounded-lg font-semibold transition text-center flex items-center justify-center gap-2">
-                    <i class="far fa-copy"></i> <span id="copyBtnText">Copiar Datos de Transferencia</span>
-                </button>
-            </div>
-        </section>
-
         <!-- FOOTER -->
         <footer class="text-center pt-8 pb-12 text-gray-500 text-xs space-y-3">
             <div class="flex justify-center items-center gap-3 text-gold-mid">
@@ -489,33 +455,6 @@
             showToast("¡Sugerencia enviada!");
             window.open(whatsappURL, '_blank');
             document.getElementById('songName').value = "";
-        }
-
-        // BANK DETAILS TOGGLE
-        function toggleGiftDetails() {
-            const details = document.getElementById('giftDetails');
-            details.classList.toggle('hidden');
-        }
-
-        // COPY ALIAS / CBU TO CLIPBOARD
-        function copyCBU() {
-            const textToCopy = "eloisa.simone.15";
-            const btnText = document.getElementById('copyBtnText');
-
-            try {
-                const tempInput = document.createElement('input');
-                tempInput.value = textToCopy;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-
-                btnText.innerText = "¡Alias Copiado!";
-                showToast("Alias copiado al portapapeles");
-                setTimeout(() => { btnText.innerText = "Copiar Datos de Transferencia"; }, 3000);
-            } catch (err) {
-                showToast("Alias: eloisa.simone.15");
-            }
         }
 
         // TOAST NOTIFICATION DISPLAY
