@@ -486,18 +486,6 @@
             if (document.getElementById('songName')) document.getElementById('songName').value = "";
         }
 
-        // TOAST NOTIFICATION DISPLAY
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            if(toast && toastMsg) {
-                toastMsg.innerText = msg;
-                toast.classList.remove('translate-y-24', 'opacity-0');
-                setTimeout(() => {
-                    toast.classList.add('translate-y-24', 'opacity-0');
-                }, 3500);
-            }
-        }
     </script>
 <!-- GIFT / REGALOS SECTION -->
         <section class="glass-card p-6 sm:p-8 rounded-3xl shadow-lg border border-gold-mid/30 text-center max-w-lg mx-auto relative overflow-hidden">
@@ -525,3 +513,15 @@
                 </div>
             </div>
         </section>
+        // TOAST NOTIFICATION DISPLAY
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            if(toast && toastMsg) {
+                toastMsg.innerText = msg;
+                toast.classList.remove('translate-y-24', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('translate-y-24', 'opacity-0');
+                }, 3500);
+            }
+        }
